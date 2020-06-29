@@ -1,0 +1,211 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Indegene Project</title>
+
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet"
+        type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            background: red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .left_sec {
+            width: 300px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px 40px;
+            background: green;
+        }
+
+        .left_img_container {
+            text-align: center;
+        }
+
+        .text_container {
+            height: 50%;
+            background: yellow;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .left_img {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .add_btn {
+            padding: 20px 40px;
+            cursor: pointer;
+            margin: 20px auto;
+            background: blue;
+            color: #ffffff;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .right_sec {
+            width: calc(100% - 300px);
+            height: 100vh;
+            background: gray;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .right_container {
+            width: 400px;
+            height: 500px;
+            margin: 20px;
+            background-color: greenyellow;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .right_container.active {
+            border: 2px solid red;
+        }
+
+        .draggable_div {
+            border: dashed 1px #CCC;
+            width: 120px;
+            height: 120px;
+            padding: 5px;
+            margin: 5px;
+            font: 13px Arial;
+            cursor: move;
+            float: left
+        }
+
+        .resize_img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .text_container {
+            width: 100%;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .right_fotter {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: 100%;
+            height: 70px;
+            background: #ffffff;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            padding: 0 30px
+        }
+
+        .footer_btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 20px;
+            cursor: pointer;
+            border: 2px solid #000000;
+            font-weight: bold;
+            font-size: 1rem;
+            margin: 0 20px;
+            box-shadow: 2px 4px 2px 0px #000;
+            text-decoration: none;
+            color: #000000;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $(".container").on('click', '.right_container', function () {
+                if ($(this).hasClass('active')) {
+                    return
+                }
+                else {
+                    $(".right_container").removeClass('active');
+                    $(this).addClass('active');
+                }
+            })
+            $('#add_container').on("click", function () {
+                if ($(".right_container").length === 0) {
+                    $(".right_sec").append(`<div class='right_container active'></div>`);
+                } else {
+                    $(".right_sec").append(`<div class='right_container'></div>`);
+                }
+            })
+            $(".left_img_container").on('click', '.left_img', function () {
+                let url = $(this).prop('src');
+                $(".right_container.active").append(`<div class="draggable_div"><img class="resize_img" src=${url} alt="dragImg"/></div>`);
+                $(function () {
+                    $(".draggable_div").draggable({
+                        containment: $(".right_container.active")
+                    }).resizable();
+                });
+            });
+
+            $("#add_text").on('click', () => {
+                $(".right_container.active").last().append(
+                    ` <div class="text_container">
+                <p class="indi_text">What is Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry Lorem Ipsum has been the industry's standard dummy text ever since the 1500s when an unknown  </p>
+                <p class="indi_text">What is of the printing and typesetting industry Lorem Ipsum <a href="https://www.google.com" target="_blank"> GOOGLE </a>since the </p>
+            </div>`
+                )
+            })
+
+            $("#delete").on("click", function () {
+                $(".right_container.active").remove();
+            })
+        })
+    </script>
+
+</head>
+
+<body>
+    <section class="container">
+        <section class="left_sec">
+            <article class="left_img_container">
+                <img src="https://editor-statics.s3.ap-south-1.amazonaws.com/Image1.png" alt="image" class="left_img" />
+                <img src="https://editor-statics.s3.ap-south-1.amazonaws.com/Image2.png" alt="image" class="left_img" />
+            </article>
+            <article class="text_container">
+                <div id="add_container" class="add_btn"> Add Container </div>
+                <div id="add_text" class="add_btn"> Add Text </div>
+            </article>
+        </section>
+        <section class="right_sec">
+            <section class="right_fotter">
+                <div id="delete" class="footer_btn"> Delete </div>
+                <a class="footer_btn"
+                    onclick="this.href='data:text/html;charset=UTF-8,'+encodeURIComponent(document.documentElement.outerHTML)"
+                    href="#" download="IndegenProject.html">Export</a>
+            </section>
+        </section>
+    </section>
+</body>
+
+</html>
